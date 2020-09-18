@@ -3,6 +3,7 @@ import React from "react";
 import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
+import TextField from "@material-ui/core/TextField";
 
 import "./styles.css";
 
@@ -76,8 +77,7 @@ const AddEventDetailsStyles = {
 
   label: {
     marginLeft: "5px",
-    display: "inline-block",
-    marginBottom: "5px"
+    display: "inline-block"
   },
 
   eventInputs: {
@@ -85,8 +85,7 @@ const AddEventDetailsStyles = {
     outline: "none",
     border: "none",
     borderRadius: "20px",
-    height: "25px",
-    textIndent: "5px"
+    height: "25px"
   },
 
   description: {
@@ -128,46 +127,21 @@ class AddEventDetailsComp extends React.Component {
         //onEscapeKeyDown={this.props.handleEventForm}
         classes={{ paper: classes.addEventDialog }}
       >
-        <div className={classes.addEvent}>
-          <form>
-            <div className={classes.eventForm}>
-              <label htmlFor="title-input">Name of the event:* </label>
-              <br />
-              <input
-                className={classes.eventInputs}
-                type="text"
-                placeholder="Add event title"
-                required
-              />
-            </div>
-            <div className={classes.eventForm}>
-              <label htmlFor="description-input">Description: </label>
-              <br />
-              <textarea className={classes.eventInputs} rows="4"></textarea>
-            </div>
-            <div className={classes.eventForm}>
-              <label htmlFor="start-date-input">Start date:* </label>
-              <br />
-              <input className={classes.eventInputs} type="date" required />
-            </div>
-            <div className={classes.eventForm}>
-              <label htmlFor="end-date-input">End date:* </label>
-              <br />
-              <input className={classes.eventInputs} type="date" required />
-            </div>
-            <div id="error-message"></div>
-            <div className={classes.eventForm}>
-              <Button
-                onClick={this.handleEventForm}
-                className={classes.btn}
-                variant="contained"
-                color="primary"
-              >
-                Add Event
-              </Button>
-            </div>
-          </form>
-        </div>
+        <form className={classes.addEvent}>
+          <TextField className={classes.eventInputs} label="Event Title" />
+          <TextField
+            className={classes.eventInputs}
+            label="Event description"
+          />
+          <Button
+            onClick={this.handleEventForm}
+            className={classes.btn}
+            variant="contained"
+            color="primary"
+          >
+            Add Event
+          </Button>
+        </form>
       </Dialog>
     );
   }
