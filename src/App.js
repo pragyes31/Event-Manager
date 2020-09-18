@@ -67,45 +67,6 @@ const AddEventDetailsStyles = {
     color: "#fff",
     border: "3px solid #1c6e7d",
     borderRadius: "20px"
-  },
-
-  eventForm: {
-    margin: "15px",
-    display: "flex",
-    flexDirection: "column"
-  },
-
-  label: {
-    marginLeft: "5px",
-    display: "inline-block"
-  },
-
-  eventInputs: {
-    width: "80%",
-    outline: "none",
-    border: "none",
-    borderRadius: "20px",
-    height: "25px"
-  },
-
-  description: {
-    width: "100%",
-    outline: "none",
-    border: "none",
-    borderRadius: "20px",
-    textIndent: "10px",
-    paddingTop: "5px"
-  },
-
-  btn: {
-    width: "80%",
-    height: "25px",
-    outline: "none",
-    border: "none",
-    borderRadius: "10px",
-    cursor: "pointer",
-    marginTop: "10px",
-    fontWeight: "bold"
   }
 };
 
