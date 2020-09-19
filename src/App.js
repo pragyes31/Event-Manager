@@ -14,6 +14,7 @@ export default function App() {
   return (
     <div className="App">
       <AddEventButton />
+      <EventsList />
     </div>
   );
 }
@@ -90,6 +91,10 @@ class AddEventDetailsComp extends React.Component {
   handleDateChange = () => {
     console.log("change date");
   };
+  handleSubmitForm = (e) => {
+    e.preventDefault();
+    console.log("submit form");
+  };
   render() {
     const { classes } = this.props;
     return (
@@ -106,27 +111,23 @@ class AddEventDetailsComp extends React.Component {
           <TextField
             className={classes.eventInputs}
             label="Describe your event"
+            multiline
+            rows={2}
           />
           <TextField
             label="Event start date & time"
             type="datetime-local"
             defaultValue="2017-05-24T10:30"
             className={classes.eventInputs}
-            InputLabelProps={{
-              shrink: true
-            }}
           />
           <TextField
             label="Event end date & time"
             type="datetime-local"
             defaultValue="2017-05-24T10:30"
             className={classes.eventInputs}
-            InputLabelProps={{
-              shrink: true
-            }}
           />
           <Button
-            onClick={this.handleEventForm}
+            onClick={this.handleSubmitForm}
             className={classes.btn}
             variant="contained"
             color="primary"
@@ -140,3 +141,7 @@ class AddEventDetailsComp extends React.Component {
 }
 
 const AddEventDetails = withStyles(AddEventDetailsStyles)(AddEventDetailsComp);
+
+function EventsList() {
+  return <div>event</div>;
+}
