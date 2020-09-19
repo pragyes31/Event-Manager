@@ -4,6 +4,9 @@ import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import TextField from "@material-ui/core/TextField";
+import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+
+import DateFnsUtils from "@date-io/date-fns";
 
 import "./styles.css";
 
@@ -27,7 +30,7 @@ class AddEventButtonComp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isEventFormOpen: true
+      isEventFormOpen: false
     };
   }
   handleEventForm = () => {
@@ -61,12 +64,19 @@ const AddEventButton = withStyles(AddEventButtonStyles)(AddEventButtonComp);
 const AddEventDetailsStyles = {
   addEvent: {
     width: "400px",
-    height: "80vh",
-    backgroundColor: "#0ca8a3",
-    margin: "10px 20px 0px 10px",
-    color: "#fff",
-    border: "3px solid #1c6e7d",
-    borderRadius: "20px"
+    height: "auto",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    marginTop: "10px"
+  },
+  eventInputs: {
+    width: "80%",
+    marginBottom: "10px"
+  },
+  btn: {
+    width: "60%",
+    margin: "20px 0px"
   }
 };
 
@@ -77,6 +87,9 @@ class AddEventDetailsComp extends React.Component {
       name: ""
     };
   }
+  handleDateChange = () => {
+    console.log("change date");
+  };
   render() {
     const { classes } = this.props;
     return (
@@ -84,15 +97,33 @@ class AddEventDetailsComp extends React.Component {
         open={this.props.isEventFormOpen}
         aria-labelledby="Add New event"
         aria-describedby="Dialog window to add details about the new page"
-        //onBackdropClick={this.props.handleEventForm}
-        //onEscapeKeyDown={this.props.handleEventForm}
+        onBackdropClick={this.props.handleEventForm}
+        onEscapeKeyDown={this.props.handleEventForm}
         classes={{ paper: classes.addEventDialog }}
       >
         <form className={classes.addEvent}>
-          <TextField className={classes.eventInputs} label="Event Title" />
+          <TextField className={classes.eventInputs} label="Name your event" />
           <TextField
             className={classes.eventInputs}
-            label="Event description"
+            label="Describe your event"
+          />
+          <TextField
+            label="Event start date & time"
+            type="datetime-local"
+            defaultValue="2017-05-24T10:30"
+            className={classes.eventInputs}
+            InputLabelProps={{
+              shrink: true
+            }}
+          />
+          <TextField
+            label="Event end date & time"
+            type="datetime-local"
+            defaultValue="2017-05-24T10:30"
+            className={classes.eventInputs}
+            InputLabelProps={{
+              shrink: true
+            }}
           />
           <Button
             onClick={this.handleEventForm}
