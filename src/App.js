@@ -4,19 +4,22 @@ import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import TextField from "@material-ui/core/TextField";
-import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-
-import DateFnsUtils from "@date-io/date-fns";
 
 import "./styles.css";
 
-export default function App() {
-  return (
-    <div className="App">
-      <AddEventButton />
-      <EventsList />
-    </div>
-  );
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  render() {
+    return (
+      <div className="app">
+        <AddEventButton />
+        <EventsList />
+      </div>
+    );
+  }
 }
 
 const AddEventButtonStyles = {
@@ -37,6 +40,9 @@ class AddEventButtonComp extends React.Component {
   handleEventForm = () => {
     this.setState({ isEventFormOpen: !this.state.isEventFormOpen });
   };
+  addEventToUI = (eve) => {
+    console.log(eve);
+  };
   render() {
     const { classes } = this.props;
     return (
@@ -50,9 +56,10 @@ class AddEventButtonComp extends React.Component {
           Add Event
         </Button>
         {this.state.isEventFormOpen && (
-          <AddEventDetails
+          <EventDetailsForm
             isEventFormOpen={this.state.isEventFormOpen}
             handleEventForm={this.handleEventForm}
+            addEventToUI={this.addEventToUI}
           />
         )}
       </div>
@@ -62,7 +69,7 @@ class AddEventButtonComp extends React.Component {
 
 const AddEventButton = withStyles(AddEventButtonStyles)(AddEventButtonComp);
 
-const AddEventDetailsStyles = {
+const EventDetailsFormStyles = {
   addEvent: {
     width: "400px",
     height: "auto",
@@ -81,11 +88,14 @@ const AddEventDetailsStyles = {
   }
 };
 
-class AddEventDetailsComp extends React.Component {
+class EventDetailsFormComp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: ""
+      eventName: "",
+      eventDescription: "",
+      startDate: "",
+      endDate: ""
     };
   }
   handleDateChange = () => {
@@ -93,7 +103,12 @@ class AddEventDetailsComp extends React.Component {
   };
   handleSubmitForm = (e) => {
     e.preventDefault();
-    console.log("submit form");
+    this.props.handleEventForm();
+    this.props.addEventToUI("some event data");
+  };
+  handleChange = (e) => {
+    console.log(e.target.value);
+    this.setState({ eventName: e.target.value });
   };
   render() {
     const { classes } = this.props;
@@ -106,8 +121,14 @@ class AddEventDetailsComp extends React.Component {
         onEscapeKeyDown={this.props.handleEventForm}
         classes={{ paper: classes.addEventDialog }}
       >
-        <form className={classes.addEvent}>
-          <TextField className={classes.eventInputs} label="Name your event" />
+        <form className={classes.addEvent} onSubmit={this.handleSubmitForm}>
+          <TextField
+            value={this.state.eventName}
+            className={classes.eventInputs}
+            label="Name your event"
+            required
+            onChange={() => this.handleChange}
+          />
           <TextField
             className={classes.eventInputs}
             label="Describe your event"
@@ -119,15 +140,17 @@ class AddEventDetailsComp extends React.Component {
             type="datetime-local"
             defaultValue="2017-05-24T10:30"
             className={classes.eventInputs}
+            required
           />
           <TextField
             label="Event end date & time"
             type="datetime-local"
             defaultValue="2017-05-24T10:30"
             className={classes.eventInputs}
+            required
           />
           <Button
-            onClick={this.handleSubmitForm}
+            type="submit"
             className={classes.btn}
             variant="contained"
             color="primary"
@@ -140,7 +163,9 @@ class AddEventDetailsComp extends React.Component {
   }
 }
 
-const AddEventDetails = withStyles(AddEventDetailsStyles)(AddEventDetailsComp);
+const EventDetailsForm = withStyles(EventDetailsFormStyles)(
+  EventDetailsFormComp
+);
 
 function EventsList() {
   return <div>event</div>;
