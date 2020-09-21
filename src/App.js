@@ -27,6 +27,10 @@ const AddEventButtonStyles = {
     width: "60%",
     maxWidth: "400px",
     marginTop: "20px"
+  },
+  btnParent: {
+    display: "flex",
+    justifyContent: "center"
   }
 };
 
@@ -46,7 +50,7 @@ class AddEventButtonComp extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <div>
+      <div className={classes.btnParent}>
         <Button
           onClick={this.handleEventForm}
           className={classes.btn}
@@ -92,23 +96,42 @@ class EventDetailsFormComp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      eventName: "",
-      eventDescription: "",
-      startDate: "",
-      endDate: ""
+      currentEvent: {
+        eventName: "",
+        eventDescription: "",
+        startDate: "",
+        endDate: ""
+      }
     };
   }
-  handleDateChange = () => {
-    console.log("change date");
-  };
   handleSubmitForm = (e) => {
     e.preventDefault();
     this.props.handleEventForm();
-    this.props.addEventToUI("some event data");
+    this.props.addEventToUI(this.state.currentEvent);
   };
-  handleChange = (e) => {
-    console.log(e.target.value);
-    this.setState({ eventName: e.target.value });
+  handleEventName = (e) => {
+    this.setState({
+      currentEvent: { ...this.state.currentEvent, eventName: e.target.value }
+    });
+  };
+  handleEventDesc = (e) => {
+    this.setState({
+      currentEvent: {
+        ...this.state.currentEvent,
+        eventDescription: e.target.value
+      }
+    });
+  };
+  handleEventStartDate = (e) => {
+    console.log(`start date = ${e.target.value}`);
+    this.setState({
+      currentEvent: { ...this.state.currentEvent, startDate: e.target.value }
+    });
+  };
+  handleEventEndDate = (e) => {
+    this.setState({
+      currentEvent: { ...this.state.currentEvent, endDate: e.target.value }
+    });
   };
   render() {
     const { classes } = this.props;
@@ -127,10 +150,11 @@ class EventDetailsFormComp extends React.Component {
             className={classes.eventInputs}
             label="Name your event"
             required
-            onChange={() => this.handleChange}
+            onChange={this.handleEventName}
           />
           <TextField
             className={classes.eventInputs}
+            onChange={this.handleEventDesc}
             label="Describe your event"
             multiline
             rows={2}
@@ -140,6 +164,7 @@ class EventDetailsFormComp extends React.Component {
             type="datetime-local"
             defaultValue="2017-05-24T10:30"
             className={classes.eventInputs}
+            onChange={this.handleEventStartDate}
             required
           />
           <TextField
@@ -147,6 +172,7 @@ class EventDetailsFormComp extends React.Component {
             type="datetime-local"
             defaultValue="2017-05-24T10:30"
             className={classes.eventInputs}
+            onChange={this.handleEventEndDate}
             required
           />
           <Button
