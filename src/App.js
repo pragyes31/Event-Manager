@@ -10,13 +10,29 @@ import "./styles.css";
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      isEventFormOpen: false,
+      eventsObj: {}
+    };
   }
+  handleEventForm = () => {
+    this.setState({ isEventFormOpen: !this.state.isEventFormOpen });
+  };
+  addEventToUI = (eventToAdd) => {
+    this.setState({ eventsObj: { ...this.state.eventsObj, eventToAdd } });
+  };
   render() {
     return (
       <div className="app">
-        <AddEventButton />
+        <AddEventButton handleEventForm={this.handleEventForm} />
         <EventsList />
+        {this.state.isEventFormOpen && (
+          <EventDetailsForm
+            isEventFormOpen={this.state.isEventFormOpen}
+            handleEventForm={this.handleEventForm}
+            addEventToUI={this.addEventToUI}
+          />
+        )}
       </div>
     );
   }
@@ -34,41 +50,20 @@ const AddEventButtonStyles = {
   }
 };
 
-class AddEventButtonComp extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isEventFormOpen: false
-    };
-  }
-  handleEventForm = () => {
-    this.setState({ isEventFormOpen: !this.state.isEventFormOpen });
-  };
-  addEventToUI = (eve) => {
-    console.log(eve);
-  };
-  render() {
-    const { classes } = this.props;
-    return (
-      <div className={classes.btnParent}>
-        <Button
-          onClick={this.handleEventForm}
-          className={classes.btn}
-          variant="contained"
-          color="primary"
-        >
-          Add Event
-        </Button>
-        {this.state.isEventFormOpen && (
-          <EventDetailsForm
-            isEventFormOpen={this.state.isEventFormOpen}
-            handleEventForm={this.handleEventForm}
-            addEventToUI={this.addEventToUI}
-          />
-        )}
-      </div>
-    );
-  }
+function AddEventButtonComp(props) {
+  const { classes } = props;
+  return (
+    <div className={classes.btnParent}>
+      <Button
+        onClick={props.handleEventForm}
+        className={classes.btn}
+        variant="contained"
+        color="primary"
+      >
+        Add Event
+      </Button>
+    </div>
+  );
 }
 
 const AddEventButton = withStyles(AddEventButtonStyles)(AddEventButtonComp);
@@ -123,7 +118,6 @@ class EventDetailsFormComp extends React.Component {
     });
   };
   handleEventStartDate = (e) => {
-    console.log(`start date = ${e.target.value}`);
     this.setState({
       currentEvent: { ...this.state.currentEvent, startDate: e.target.value }
     });
