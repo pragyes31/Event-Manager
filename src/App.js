@@ -93,7 +93,6 @@ class EventDetailsFormComp extends React.Component {
     this.state = {
       currentEvent: {
         eventName: "",
-        eventDescription: "",
         startDate: "",
         endDate: ""
       }
@@ -107,14 +106,6 @@ class EventDetailsFormComp extends React.Component {
   handleEventName = (e) => {
     this.setState({
       currentEvent: { ...this.state.currentEvent, eventName: e.target.value }
-    });
-  };
-  handleEventDesc = (e) => {
-    this.setState({
-      currentEvent: {
-        ...this.state.currentEvent,
-        eventDescription: e.target.value
-      }
     });
   };
   handleEventStartDate = (e) => {
@@ -145,13 +136,6 @@ class EventDetailsFormComp extends React.Component {
             label="Name your event"
             required
             onChange={this.handleEventName}
-          />
-          <TextField
-            className={classes.eventInputs}
-            onChange={this.handleEventDesc}
-            label="Describe your event"
-            multiline
-            rows={2}
           />
           <TextField
             label="Event start date & time"
@@ -187,6 +171,25 @@ const EventDetailsForm = withStyles(EventDetailsFormStyles)(
   EventDetailsFormComp
 );
 
-function EventsList() {
-  return <div>event</div>;
+const EventsListStyles = {
+  eventsList: {
+    width: "90%",
+    backgroundColor: "#eee",
+    display: "flex"
+  }
+};
+
+function EventsListComp(props) {
+  const { classes } = props;
+  return (
+    <div className={classes.eventsList}>
+      <div className={classes.event}>
+        <div className={classes.name}>Birthday</div>
+        <div className={classes.startDateTime}> June 15, 2009 1:30 PM</div>
+        <div className={classes.endDateTime}>June 15, 2009 2:00 PM</div>
+      </div>
+    </div>
+  );
 }
+
+const EventsList = withStyles(EventsListStyles)(EventsListComp);
