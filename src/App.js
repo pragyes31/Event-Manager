@@ -40,13 +40,8 @@ export default class App extends React.Component {
 
 const AddEventButtonStyles = {
   btn: {
-    width: "60%",
-    maxWidth: "400px",
-    marginTop: "20px"
-  },
-  btnParent: {
-    display: "flex",
-    justifyContent: "center"
+    minWidth: "300px",
+    margin: "20px 0px"
   }
 };
 
