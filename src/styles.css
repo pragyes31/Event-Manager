@@ -1,7 +1,11 @@
 .app {
   font-family: sans-serif;
-  background-color: #999;
-  max-width: 600px;
+  display: flex;
+  justify-content: center;
+}
+
+.event-app {
+  width: 600px;
   display: flex;
   flex-direction: column;
   align-items: center;

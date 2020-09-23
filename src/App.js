@@ -24,15 +24,17 @@ export default class App extends React.Component {
   render() {
     return (
       <div className="app">
-        <AddEventButton handleEventForm={this.handleEventForm} />
-        <EventsList />
-        {this.state.isEventFormOpen && (
-          <EventDetailsForm
-            isEventFormOpen={this.state.isEventFormOpen}
-            handleEventForm={this.handleEventForm}
-            addEventToUI={this.addEventToUI}
-          />
-        )}
+        <div className="event-app">
+          <AddEventButton handleEventForm={this.handleEventForm} />
+          <EventsList />
+          {this.state.isEventFormOpen && (
+            <EventDetailsForm
+              isEventFormOpen={this.state.isEventFormOpen}
+              handleEventForm={this.handleEventForm}
+              addEventToUI={this.addEventToUI}
+            />
+          )}
+        </div>
       </div>
     );
   }
