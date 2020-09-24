@@ -25,7 +25,7 @@ export default class App extends React.Component {
 
   };
   render() {
-    console.log(this.state);
+    console.log(this.state.eventsList)
     return (
       <div className="app">
         <div className="event-app">
@@ -91,13 +91,11 @@ const EventDetailsFormStyles = {
 class EventDetailsFormComp extends React.Component {
   constructor(props) {
     super(props);
-    let startDate = Date.now();
-    console.log(startDate)
     this.state = {
       currentEvent: {
         eventName: "",
-        startDate: startDate,
-        endDate: "",
+        startDate: "2020-05-23T10:00",
+        endDate: "2020-05-23T10:30",
         eventId:""
       }
     };
@@ -136,7 +134,7 @@ class EventDetailsFormComp extends React.Component {
       >
         <form className={classes.addEvent} onSubmit={this.handleSubmitForm}>
           <TextField
-            value={this.state.eventName}
+            value={this.state.currentEvent.eventName}
             className={classes.eventInputs}
             label="Name your event"
             required
@@ -145,7 +143,7 @@ class EventDetailsFormComp extends React.Component {
           <TextField
             label="Event start date &amp; time"
             type="datetime-local"
-            defaultValue="2017-05-24T10:30"
+            value={this.state.currentEvent.startDate}
             className={classes.eventInputs}
             onChange={this.handleEventStartDate}
             required
@@ -153,7 +151,7 @@ class EventDetailsFormComp extends React.Component {
           <TextField
             label="Event end date &amp; time"
             type="datetime-local"
-            defaultValue="2017-05-24T10:30"
+            value={this.state.currentEvent.endDate}
             className={classes.eventInputs}
             onChange={this.handleEventEndDate}
             required
@@ -206,8 +204,8 @@ function EventComp(props) {
   return (
     <div className={classes.event}>
         <div className={classes.name}>Event: {props.eventName}</div>
-        <div className={classes.startDateTime}>Start Date & Time: {props.startDate}</div>
-        <div className={classes.endDateTime}>End Date & Time: {props.endDate}</div>
+        <div className={classes.startDateTime}>Start Date & Time: {props.startDate.replace("T", " ")}</div>
+        <div className={classes.endDateTime}>End Date & Time: {props.endDate.replace("T", " ")}</div>
         <div>{props.eventId}</div>
       </div>
   )
