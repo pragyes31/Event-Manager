@@ -1,4 +1,5 @@
 import React from "react";
+import { v4 as uuidv4 } from 'uuid';
 
 import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
@@ -12,21 +13,23 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       isEventFormOpen: false,
-      eventsObj: {}
+      eventsList: []
     };
   }
   handleEventForm = () => {
     this.setState({ isEventFormOpen: !this.state.isEventFormOpen });
+
   };
-  addEventToUI = (eventToAdd) => {
-    this.setState({ eventsObj: { ...this.state.eventsObj, eventToAdd } });
+  addEventToUI = (newEvent) => {
+    this.setState({ eventsList: [ ...this.state.eventsList, newEvent ], isEventFormOpen: !this.state.isEventFormOpen });
   };
   render() {
+    console.log(this.state);
     return (
       <div className="app">
         <div className="event-app">
           <AddEventButton handleEventForm={this.handleEventForm} />
-          <EventsList />
+          <EventsList eventsList={this.state.eventsList}/>
           {this.state.isEventFormOpen && (
             <EventDetailsForm
               isEventFormOpen={this.state.isEventFormOpen}
@@ -91,13 +94,14 @@ class EventDetailsFormComp extends React.Component {
       currentEvent: {
         eventName: "",
         startDate: "",
-        endDate: ""
+        endDate: "",
+        eventId:""
       }
     };
   }
   handleSubmitForm = (e) => {
     e.preventDefault();
-    this.props.handleEventForm();
+    this.setState({currentEvent: { ...this.state.currentEvent, eventId: uuidv4() }})
     this.props.addEventToUI(this.state.currentEvent);
   };
   handleEventName = (e) => {
@@ -171,8 +175,7 @@ const EventDetailsForm = withStyles(EventDetailsFormStyles)(
 const EventsListStyles = {
   eventsList: {
     width: "90%",
-    backgroundColor: "#eee",
-    display: "flex"
+    backgroundColor: "#eee"
   }
 };
 
@@ -180,13 +183,28 @@ function EventsListComp(props) {
   const { classes } = props;
   return (
     <div className={classes.eventsList}>
-      <div className={classes.event}>
-        <div className={classes.name}>Birthday</div>
-        <div className={classes.startDateTime}> June 15, 2009 1:30 PM</div>
-        <div className={classes.endDateTime}>June 15, 2009 2:00 PM</div>
-      </div>
+{props.eventsList.map((event) => {
+return <Event eventName={event.eventName} 
+startDate={event.startDate} endDate={event.endDate} key />
+})}
+        <Event />
     </div>
   );
 }
 
 const EventsList = withStyles(EventsListStyles)(EventsListComp);
+
+const eventStyles = {}
+
+function EventComp(props) {
+  const {classes} = props
+  return (
+    <div className={classes.event}>
+        <div className={classes.name}>{props.eventName}</div>
+        <div className={classes.startDateTime}>{props.startDate}</div>
+        <div className={classes.endDateTime}>{props.endDate}</div>
+      </div>
+  )
+}
+
+const Event = withStyles(eventStyles)(EventComp);
