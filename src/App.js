@@ -1,5 +1,5 @@
 import React from "react";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
@@ -18,19 +18,20 @@ export default class App extends React.Component {
   }
   handleEventForm = () => {
     this.setState({ isEventFormOpen: !this.state.isEventFormOpen });
-
   };
   addEventToUI = (newEvent) => {
-    this.setState({ eventsList: [ ...this.state.eventsList, newEvent ], isEventFormOpen: !this.state.isEventFormOpen });
-
+    this.setState({
+      eventsList: [...this.state.eventsList, newEvent],
+      isEventFormOpen: !this.state.isEventFormOpen
+    });
   };
   render() {
-    console.log(this.state.eventsList)
+    console.log(this.state.eventsList);
     return (
       <div className="app">
         <div className="event-app">
           <AddEventButton handleEventForm={this.handleEventForm} />
-          <EventsList eventsList={this.state.eventsList}/>
+          <EventsList eventsList={this.state.eventsList} />
           {this.state.isEventFormOpen && (
             <EventDetailsForm
               isEventFormOpen={this.state.isEventFormOpen}
@@ -96,14 +97,16 @@ class EventDetailsFormComp extends React.Component {
         eventName: "",
         startDate: "2020-05-23T10:00",
         endDate: "2020-05-23T10:30",
-        eventId:""
+        eventId: ""
       }
     };
   }
   handleSubmitForm = (e) => {
-    console.log(uuidv4())
+    console.log(uuidv4());
     e.preventDefault();
-    this.setState( {currentEvent: { ...this.state.currentEvent, eventId: uuidv4() }})
+    this.setState({
+      currentEvent: { ...this.state.currentEvent, eventId: uuidv4() }
+    });
     this.props.addEventToUI(this.state.currentEvent);
   };
   handleEventName = (e) => {
@@ -183,32 +186,46 @@ const EventsListStyles = {
 
 function EventsListComp(props) {
   const { classes } = props;
-   let listToSort = [...props.eventsList]
-   listToSort.sort((a,b) => a.startDate - b.startDate);
+  let listToSort = [...props.eventsList];
+  listToSort.sort((a, b) => {
+    let start1 = new Date(a.startDate);
+    let start2 = new Date(b.startDate);
+    return start1 - start2;
+  });
   return (
     <div className={classes.eventsList}>
-{listToSort.map((event) => {
-return <Event eventName={event.eventName} 
-startDate={event.startDate} endDate={event.endDate} eventId={event.eventId} />
-})}
+      {listToSort.map((event) => {
+        return (
+          <Event
+            eventName={event.eventName}
+            startDate={event.startDate}
+            endDate={event.endDate}
+            eventId={event.eventId}
+          />
+        );
+      })}
     </div>
   );
 }
 
 const EventsList = withStyles(EventsListStyles)(EventsListComp);
 
-const eventStyles = {}
+const eventStyles = {};
 
 function EventComp(props) {
-  const {classes} = props;
+  const { classes } = props;
   return (
     <div className={classes.event}>
-        <div className={classes.name}>Event: {props.eventName}</div>
-        <div className={classes.startDateTime}>Start Date & Time: {props.startDate.replace("T", " ")}</div>
-        <div className={classes.endDateTime}>End Date & Time: {props.endDate.replace("T", " ")}</div>
-        <div>{props.eventId}</div>
+      <div className={classes.name}>Event: {props.eventName}</div>
+      <div className={classes.startDateTime}>
+        Start Date & Time: {props.startDate.replace("T", " ")}
       </div>
-  )
+      <div className={classes.endDateTime}>
+        End Date & Time: {props.endDate.replace("T", " ")}
+      </div>
+      <div>{props.eventId}</div>
+    </div>
+  );
 }
 
 const Event = withStyles(eventStyles)(EventComp);
