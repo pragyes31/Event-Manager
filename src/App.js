@@ -26,7 +26,7 @@ export default class App extends React.Component {
     });
   };
   render() {
-    console.log(this.state.eventsList);
+    //console.log(this.state.eventsList);
     return (
       <div className="app">
         <div className="event-app">
@@ -102,7 +102,6 @@ class EventDetailsFormComp extends React.Component {
     };
   }
   handleSubmitForm = (e) => {
-    console.log(uuidv4());
     e.preventDefault();
     this.setState({
       currentEvent: { ...this.state.currentEvent, eventId: uuidv4() }
@@ -194,15 +193,38 @@ function EventsListComp(props) {
   });
   return (
     <div className={classes.eventsList}>
-      {listToSort.map((event) => {
-        return (
-          <Event
-            eventName={event.eventName}
-            startDate={event.startDate}
-            endDate={event.endDate}
-            eventId={event.eventId}
-          />
+      {listToSort.map((event, index) => {
+        let firstEventStart = Date.parse(new Date(event.startDate));
+        let firstEventEnd = Date.parse(new Date(event.endDate));
+        //console.log(index)
+        let secondEventStart = Date.parse(
+          new Date(listToSort[index + 1].endDate)
         );
+        if (
+          index < listToSort.length - 1 &&
+          secondEventStart > firstEventStart &&
+          secondEventStart < firstEventEnd
+        ) {
+          return (
+            <Event
+              eventName={event.eventName}
+              startDate={event.startDate}
+              endDate={event.endDate}
+              eventId={event.eventId}
+              isConflict={true}
+            />
+          );
+        } else {
+          return (
+            <Event
+              eventName={event.eventName}
+              startDate={event.startDate}
+              endDate={event.endDate}
+              eventId={event.eventId}
+              isConflict={false}
+            />
+          );
+        }
       })}
     </div>
   );
@@ -210,12 +232,19 @@ function EventsListComp(props) {
 
 const EventsList = withStyles(EventsListStyles)(EventsListComp);
 
-const eventStyles = {};
+const eventStyles = {
+  event: {
+    backgroundColor: "red"
+  },
+  conflict: {
+    border: "1px solid red"
+  }
+};
 
 function EventComp(props) {
   const { classes } = props;
   return (
-    <div className={classes.event}>
+    <div className={`${classes.event} ${props.isConflict && classes.test}`}>
       <div className={classes.name}>Event: {props.eventName}</div>
       <div className={classes.startDateTime}>
         Start Date & Time: {props.startDate.replace("T", " ")}
