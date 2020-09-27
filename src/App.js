@@ -1,5 +1,4 @@
 import React from "react";
-import { v4 as uuidv4 } from "uuid";
 
 import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
@@ -26,12 +25,14 @@ export default class App extends React.Component {
     });
   };
   render() {
-    //console.log(this.state.eventsList);
+    console.log(this.state.eventsList);
     return (
       <div className="app">
         <div className="event-app">
           <AddEventButton handleEventForm={this.handleEventForm} />
-          <EventsList eventsList={this.state.eventsList} />
+          {this.state.eventsList.length > 0 && (
+            <EventsList eventsList={this.state.eventsList} />
+          )}
           {this.state.isEventFormOpen && (
             <EventDetailsForm
               isEventFormOpen={this.state.isEventFormOpen}
@@ -102,15 +103,21 @@ class EventDetailsFormComp extends React.Component {
     };
   }
   handleSubmitForm = (e) => {
-    e.preventDefault();
-    this.setState({
-      currentEvent: { ...this.state.currentEvent, eventId: uuidv4() }
-    });
+    //let eventId = new Date().getTime();
+    // this.setState((prevState) => {
+    //   return { currentEvent: { ...this.prevState.currentEvent, eventId, eventName:"onSubmit" },  };
+    // });
     this.props.addEventToUI(this.state.currentEvent);
+    e.preventDefault();
   };
   handleEventName = (e) => {
+    let eventId = new Date().getTime();
     this.setState({
-      currentEvent: { ...this.state.currentEvent, eventName: e.target.value }
+      currentEvent: {
+        ...this.state.currentEvent,
+        eventName: e.target.value,
+        eventId
+      }
     });
   };
   handleEventStartDate = (e) => {
@@ -191,20 +198,21 @@ function EventsListComp(props) {
     let start2 = new Date(b.startDate);
     return start1 - start2;
   });
+
   if (listToSort.length > 1) {
     return (
       <div className={classes.eventsList}>
         {listToSort.map((event, index) => {
           let firstEventStart = Date.parse(new Date(event.startDate));
           let firstEventEnd = Date.parse(new Date(event.endDate));
-          console.log(index);
-          let secondEventStart = Date.parse(
-            new Date(listToSort[index + 1].endDate)
-          );
+          let secondEventStart =
+            index !== listToSort.length - 1
+              ? Date.parse(new Date(listToSort[index + 1].endDate))
+              : 1;
           if (
             index < listToSort.length - 1 &&
-            secondEventStart > firstEventStart &&
-            secondEventStart < firstEventEnd
+            (secondEventStart > firstEventStart ||
+              secondEventStart < firstEventEnd)
           ) {
             return (
               <Event
@@ -231,25 +239,22 @@ function EventsListComp(props) {
     );
   } else {
     return (
-      <div className={classes.eventsList}>
-        <Event
-          eventName={listToSort[0].eventName}
-          startDate={listToSort[0].startDate}
-          endDate={listToSort[0].endDate}
-          eventId={listToSort[0].eventId}
-          isConflict={true}
-        />
-      </div>
+      <Event
+        eventName={listToSort[0].eventName}
+        startDate={listToSort[0].startDate}
+        endDate={listToSort[0].endDate}
+        eventId={listToSort[0].eventId}
+        isConflict={false}
+      />
     );
   }
-  //return "dfg"
 }
 
 const EventsList = withStyles(EventsListStyles)(EventsListComp);
 
 const eventStyles = {
   event: {
-    backgroundColor: "red"
+    backgroundColor: "#eee"
   },
   conflict: {
     border: "1px solid red"
@@ -259,7 +264,10 @@ const eventStyles = {
 function EventComp(props) {
   const { classes } = props;
   return (
-    <div className={`${classes.event} ${props.isConflict && classes.test}`}>
+    <div
+      key={props.eventId}
+      className={`${classes.event} ${props.isConflict && classes.conflict}`}
+    >
       <div className={classes.name}>Event: {props.eventName}</div>
       <div className={classes.startDateTime}>
         Start Date & Time: {props.startDate.replace("T", " ")}
