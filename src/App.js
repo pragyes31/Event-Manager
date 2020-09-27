@@ -191,43 +191,58 @@ function EventsListComp(props) {
     let start2 = new Date(b.startDate);
     return start1 - start2;
   });
-  return (
-    <div className={classes.eventsList}>
-      {listToSort.map((event, index) => {
-        let firstEventStart = Date.parse(new Date(event.startDate));
-        let firstEventEnd = Date.parse(new Date(event.endDate));
-        //console.log(index)
-        let secondEventStart = Date.parse(
-          new Date(listToSort[index + 1].endDate)
-        );
-        if (
-          index < listToSort.length - 1 &&
-          secondEventStart > firstEventStart &&
-          secondEventStart < firstEventEnd
-        ) {
-          return (
-            <Event
-              eventName={event.eventName}
-              startDate={event.startDate}
-              endDate={event.endDate}
-              eventId={event.eventId}
-              isConflict={true}
-            />
+  if (listToSort.length > 1) {
+    return (
+      <div className={classes.eventsList}>
+        {listToSort.map((event, index) => {
+          let firstEventStart = Date.parse(new Date(event.startDate));
+          let firstEventEnd = Date.parse(new Date(event.endDate));
+          console.log(index);
+          let secondEventStart = Date.parse(
+            new Date(listToSort[index + 1].endDate)
           );
-        } else {
-          return (
-            <Event
-              eventName={event.eventName}
-              startDate={event.startDate}
-              endDate={event.endDate}
-              eventId={event.eventId}
-              isConflict={false}
-            />
-          );
-        }
-      })}
-    </div>
-  );
+          if (
+            index < listToSort.length - 1 &&
+            secondEventStart > firstEventStart &&
+            secondEventStart < firstEventEnd
+          ) {
+            return (
+              <Event
+                eventName={event.eventName}
+                startDate={event.startDate}
+                endDate={event.endDate}
+                eventId={event.eventId}
+                isConflict={true}
+              />
+            );
+          } else {
+            return (
+              <Event
+                eventName={event.eventName}
+                startDate={event.startDate}
+                endDate={event.endDate}
+                eventId={event.eventId}
+                isConflict={false}
+              />
+            );
+          }
+        })}
+      </div>
+    );
+  } else {
+    return (
+      <div className={classes.eventsList}>
+        <Event
+          eventName={listToSort[0].eventName}
+          startDate={listToSort[0].startDate}
+          endDate={listToSort[0].endDate}
+          eventId={listToSort[0].eventId}
+          isConflict={true}
+        />
+      </div>
+    );
+  }
+  //return "dfg"
 }
 
 const EventsList = withStyles(EventsListStyles)(EventsListComp);
