@@ -25,7 +25,7 @@ export default class App extends React.Component {
     });
   };
   render() {
-    console.log(this.state.eventsList);
+    //console.log(this.state.eventsList);
     return (
       <div className="app">
         <div className="event-app">
@@ -191,62 +191,48 @@ const EventsListStyles = {
 };
 
 function EventsListComp(props) {
-  const { classes } = props;
-  let listToSort = [...props.eventsList];
+  const { classes, eventsList } = props;
+  let listToSort = [...eventsList];
   listToSort.sort((a, b) => {
     let start1 = new Date(a.startDate);
     let start2 = new Date(b.startDate);
     return start1 - start2;
   });
-
+  console.log(listToSort);
   if (listToSort.length > 1) {
     return (
       <div className={classes.eventsList}>
         {listToSort.map((event, index) => {
           let firstEventStart = Date.parse(new Date(event.startDate));
           let firstEventEnd = Date.parse(new Date(event.endDate));
+          //
           let secondEventStart =
+            index !== listToSort.length - 1
+              ? Date.parse(new Date(listToSort[index + 1].StartDate))
+              : 1;
+          let secondEventEnd =
             index !== listToSort.length - 1
               ? Date.parse(new Date(listToSort[index + 1].endDate))
               : 1;
+          let startDateConflict =
+            secondEventStart >= firstEventStart &&
+            secondEventStart <= firstEventEnd;
+          let endDateConflict =
+            secondEventEnd >= firstEventStart &&
+            secondEventEnd <= firstEventEnd;
           if (
             index < listToSort.length - 1 &&
-            (secondEventStart > firstEventStart ||
-              secondEventStart < firstEventEnd)
+            (startDateConflict || endDateConflict)
           ) {
-            return (
-              <Event
-                eventName={event.eventName}
-                startDate={event.startDate}
-                endDate={event.endDate}
-                eventId={event.eventId}
-                isConflict={true}
-              />
-            );
+            return <Event event={event} isConflict={true} />;
           } else {
-            return (
-              <Event
-                eventName={event.eventName}
-                startDate={event.startDate}
-                endDate={event.endDate}
-                eventId={event.eventId}
-                isConflict={false}
-              />
-            );
+            return <Event event={event} isConflict={false} />;
           }
         })}
       </div>
     );
   } else {
-    return (
-      <Event
-        eventName={listToSort[0].eventName}
-        startDate={listToSort[0].startDate}
-        endDate={listToSort[0].endDate}
-        eventId={listToSort[0].eventId}
-        isConflict={false}
-      />
-    );
+    return <Event event={listToSort[0]} isConflict={false} />;
   }
 }
 
@@ -262,20 +248,20 @@ const eventStyles = {
 };
 
 function EventComp(props) {
-  const { classes } = props;
+  const { classes, event, isConflict } = props;
   return (
     <div
-      key={props.eventId}
-      className={`${classes.event} ${props.isConflict && classes.conflict}`}
+      key={event.eventId}
+      className={`${classes.event} ${isConflict && classes.conflict}`}
     >
-      <div className={classes.name}>Event: {props.eventName}</div>
+      <div className={classes.name}>Event: {event.eventName}</div>
       <div className={classes.startDateTime}>
-        Start Date & Time: {props.startDate.replace("T", " ")}
+        Start Date & Time: {event.startDate.replace("T", " ")}
       </div>
       <div className={classes.endDateTime}>
-        End Date & Time: {props.endDate.replace("T", " ")}
+        End Date & Time: {event.endDate.replace("T", " ")}
       </div>
-      <div>{props.eventId}</div>
+      <div>{event.eventId}</div>
     </div>
   );
 }
