@@ -206,7 +206,6 @@ function EventsListComp(props) {
         {listToSort.map((event, index) => {
           let firstEventStart = Date.parse(new Date(event.startDate));
           let firstEventEnd = Date.parse(new Date(event.endDate));
-          //
           let secondEventStart =
             index !== listToSort.length - 1
               ? Date.parse(new Date(listToSort[index + 1].StartDate))
@@ -221,15 +220,15 @@ function EventsListComp(props) {
           let endDateConflict =
             secondEventEnd >= firstEventStart &&
             secondEventEnd <= firstEventEnd;
+          let isConflict = startDateConflict || endDateConflict;
           if (
-            (index < listToSort.length - 1 &&
-              (startDateConflict || endDateConflict)) ||
-            nextEventConflict
+            index < listToSort.length - 1 &&
+            (isConflict || nextEventConflict)
           ) {
-            nextEventConflict = true;
+            nextEventConflict = isConflict;
             return <Event event={event} isConflict={true} />;
           } else {
-            return <Event event={event} isConflict={true} />;
+            return <Event event={event} isConflict={nextEventConflict} />;
           }
         })}
       </div>
