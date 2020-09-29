@@ -193,6 +193,7 @@ const EventsListStyles = {
 function EventsListComp(props) {
   const { classes, eventsList } = props;
   let listToSort = [...eventsList];
+  let nextEventConflict = false;
   listToSort.sort((a, b) => {
     let start1 = new Date(a.startDate);
     let start2 = new Date(b.startDate);
@@ -221,12 +222,14 @@ function EventsListComp(props) {
             secondEventEnd >= firstEventStart &&
             secondEventEnd <= firstEventEnd;
           if (
-            index < listToSort.length - 1 &&
-            (startDateConflict || endDateConflict)
+            (index < listToSort.length - 1 &&
+              (startDateConflict || endDateConflict)) ||
+            nextEventConflict
           ) {
+            nextEventConflict = true;
             return <Event event={event} isConflict={true} />;
           } else {
-            return <Event event={event} isConflict={false} />;
+            return <Event event={event} isConflict={true} />;
           }
         })}
       </div>
