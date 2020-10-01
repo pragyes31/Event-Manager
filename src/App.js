@@ -199,7 +199,6 @@ function EventsListComp(props) {
     let start2 = new Date(b.startDate);
     return start1 - start2;
   });
-  console.log(listToSort);
   if (listToSort.length > 1) {
     return (
       <div className={classes.eventsList}>
@@ -226,6 +225,7 @@ function EventsListComp(props) {
             (isConflict || nextEventConflict)
           ) {
             nextEventConflict = isConflict;
+            console.log(nextEventConflict + isConflict);
             return <Event event={event} isConflict={true} />;
           } else {
             return <Event event={event} isConflict={nextEventConflict} />;
@@ -234,7 +234,11 @@ function EventsListComp(props) {
       </div>
     );
   } else {
-    return <Event event={listToSort[0]} isConflict={false} />;
+    return (
+      <div className={classes.eventsList}>
+        <Event event={listToSort[0]} isConflict={false} />
+      </div>
+    );
   }
 }
 
