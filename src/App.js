@@ -48,7 +48,7 @@ export default class App extends React.Component {
 
 const AddEventButtonStyles = {
   btn: {
-    minWidth: "300px",
+    minWidth: "350px",
     margin: "20px 0px"
   }
 };
@@ -73,7 +73,7 @@ const AddEventButton = withStyles(AddEventButtonStyles)(AddEventButtonComp);
 
 const EventDetailsFormStyles = {
   addEvent: {
-    width: "400px",
+    width: "420px",
     height: "auto",
     display: "flex",
     flexDirection: "column",
@@ -87,6 +87,11 @@ const EventDetailsFormStyles = {
   btn: {
     width: "60%",
     margin: "20px 0px"
+  },
+  errorMessage: {
+    color: "red",
+    margin: "0px 20px",
+    fontSize: "14px"
   }
 };
 
@@ -94,6 +99,7 @@ class EventDetailsFormComp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      validEndDate: true,
       currentEvent: {
         eventName: "",
         startDate: "2020-05-23T10:00",
@@ -103,10 +109,6 @@ class EventDetailsFormComp extends React.Component {
     };
   }
   handleSubmitForm = (e) => {
-    //let eventId = new Date().getTime();
-    // this.setState((prevState) => {
-    //   return { currentEvent: { ...this.prevState.currentEvent, eventId, eventName:"onSubmit" },  };
-    // });
     this.props.addEventToUI(this.state.currentEvent);
     e.preventDefault();
   };
@@ -121,13 +123,25 @@ class EventDetailsFormComp extends React.Component {
     });
   };
   handleEventStartDate = (e) => {
+    let endDate = Date.parse(new Date(this.state.currentEvent.endDate));
     this.setState({
-      currentEvent: { ...this.state.currentEvent, startDate: e.target.value }
+      currentEvent: {
+        ...this.state.currentEvent,
+        startDate: e.target.value
+      },
+      validEndDate:
+        endDate < Date.parse(new Date(e.target.value)) ? false : true
     });
   };
   handleEventEndDate = (e) => {
+    let startDate = Date.parse(new Date(this.state.currentEvent.startDate));
     this.setState({
-      currentEvent: { ...this.state.currentEvent, endDate: e.target.value }
+      currentEvent: {
+        ...this.state.currentEvent,
+        endDate: e.target.value
+      },
+      validEndDate:
+        Date.parse(new Date(e.target.value)) < startDate ? false : true
     });
   };
   render() {
@@ -165,6 +179,11 @@ class EventDetailsFormComp extends React.Component {
             onChange={this.handleEventEndDate}
             required
           />
+          {!this.state.validEndDate && (
+            <div className={classes.errorMessage}>
+              The end date and time should be greater than the start date.
+            </div>
+          )}
           <Button
             type="submit"
             className={classes.btn}
