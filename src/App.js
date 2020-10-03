@@ -222,6 +222,40 @@ function EventsListComp(props) {
     return (
       <div className={classes.eventsList}>
         {listToSort.map((event, index) => {
+          let prevEventStart = Date.parse(
+            new Date(listToSort[index - 1].StartDate)
+          );
+          let prevEventEnd = Date.parse(
+            new Date(listToSort[index - 1].StartDate)
+          );
+          let currentEventStart = Date.parse(new Date(event.startDate));
+          let currentEventEnd = Date.parse(new Date(event.endDate));
+          let nextEventStart = Date.parse(
+            new Date(listToSort[index + 1].StartDate)
+          );
+          let nextEventEnd = Date.parse(
+            new Date(listToSort[index + 1].StartDate)
+          );
+          let prevStartConflict = currentEventStart < prevEventEnd;
+          let nextStartConflict = nextEventStart < currentEventStart;
+          if (listToSort.length === 1) {
+            // When there is only one event
+            return <Event event={event} isConflict={false} />;
+          } else if (listToSort.length > 1 && index === 0) {
+            // case scenarion when there are more than 1 event but we are at index 0
+            return <Event event={event} isConflict={nextStartConflict} />;
+          } else if (listToSort.length > 1 && index === listToSort.length - 1) {
+            // case scenarion when there are more than 1 event but we are at last index
+            return <Event event={event} isConflict={prevStartConflict} />;
+          } else {
+            return prevStartConflict || nextStartConflict ? (
+              <Event event={event} isConflict={true} />
+            ) : (
+              <Event event={event} isConflict={false} />
+            );
+          }
+        })}
+        {/* {listToSort.map((event, index) => {
           let firstEventStart = Date.parse(new Date(event.startDate));
           let firstEventEnd = Date.parse(new Date(event.endDate));
           let secondEventStart =
@@ -249,7 +283,7 @@ function EventsListComp(props) {
           } else {
             return <Event event={event} isConflict={nextEventConflict} />;
           }
-        })}
+        })} */}
       </div>
     );
   } else {
