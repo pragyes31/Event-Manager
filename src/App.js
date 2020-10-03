@@ -212,50 +212,62 @@ const EventsListStyles = {
 function EventsListComp(props) {
   const { classes, eventsList } = props;
   let listToSort = [...eventsList];
-  let nextEventConflict = false;
   listToSort.sort((a, b) => {
     let start1 = new Date(a.startDate);
     let start2 = new Date(b.startDate);
     return start1 - start2;
   });
-  if (listToSort.length > 1) {
-    return (
-      <div className={classes.eventsList}>
-        {listToSort.map((event, index) => {
-          let prevEventStart = Date.parse(
-            new Date(listToSort[index - 1].StartDate)
-          );
-          let prevEventEnd = Date.parse(
-            new Date(listToSort[index - 1].StartDate)
-          );
-          let currentEventStart = Date.parse(new Date(event.startDate));
-          let currentEventEnd = Date.parse(new Date(event.endDate));
-          let nextEventStart = Date.parse(
-            new Date(listToSort[index + 1].StartDate)
-          );
-          let nextEventEnd = Date.parse(
-            new Date(listToSort[index + 1].StartDate)
-          );
-          let prevStartConflict = currentEventStart < prevEventEnd;
-          let nextStartConflict = nextEventStart < currentEventStart;
-          if (listToSort.length === 1) {
-            // When there is only one event
-            return <Event event={event} isConflict={false} />;
-          } else if (listToSort.length > 1 && index === 0) {
-            // case scenarion when there are more than 1 event but we are at index 0
-            return <Event event={event} isConflict={nextStartConflict} />;
-          } else if (listToSort.length > 1 && index === listToSort.length - 1) {
-            // case scenarion when there are more than 1 event but we are at last index
-            return <Event event={event} isConflict={prevStartConflict} />;
-          } else {
-            return prevStartConflict || nextStartConflict ? (
-              <Event event={event} isConflict={true} />
-            ) : (
+  return (
+    <div className={classes.eventsList}>
+      {listToSort.map((event, index) => {
+        let currentEventStart = Date.parse(new Date(event.startDate));
+        let currentEventEnd = Date.parse(new Date(event.endDate));
+        let prevEventEnd =
+          index !== 0
+            ? Date.parse(new Date(listToSort[index - 1].startDate))
+            : undefined;
+        let nextEventStart =
+          index !== listToSort.length - 1
+            ? Date.parse(new Date(listToSort[index + 1].startDate))
+            : undefined;
+        let prevEventConflict = currentEventStart < prevEventEnd;
+        let nextEventConflict = nextEventStart < currentEventEnd;
+        console.log(`prevEventEnd: ${prevEventEnd}`);
+        console.log(`nextEventStart: ${nextEventStart}`);
+        if (listToSort.length === 1) {
+          // When there is only one event
+          return (
+            <div key={event.eventId}>
               <Event event={event} isConflict={false} />
-            );
-          }
-        })}
-        {/* {listToSort.map((event, index) => {
+            </div>
+          );
+        } else if (listToSort.length > 1 && index === 0) {
+          // case scenarion when there are more than 1 event but we are at index 0
+          return (
+            <div key={event.eventId}>
+              <Event event={event} isConflict={nextEventConflict} />
+            </div>
+          );
+        } else if (listToSort.length > 1 && index === listToSort.length - 1) {
+          // case scenarion when there are more than 1 event but we are at last index
+          return (
+            <div key={event.eventId}>
+              <Event event={event} isConflict={prevEventConflict} />
+            </div>
+          );
+        } else {
+          return prevEventConflict || nextEventConflict ? (
+            <div key={event.eventId}>
+              <Event event={event} isConflict={true} />
+            </div>
+          ) : (
+            <div key={event.eventId}>
+              <Event event={event} isConflict={false} />
+            </div>
+          );
+        }
+      })}
+      {/* {listToSort.map((event, index) => {
           let firstEventStart = Date.parse(new Date(event.startDate));
           let firstEventEnd = Date.parse(new Date(event.endDate));
           let secondEventStart =
@@ -284,15 +296,8 @@ function EventsListComp(props) {
             return <Event event={event} isConflict={nextEventConflict} />;
           }
         })} */}
-      </div>
-    );
-  } else {
-    return (
-      <div className={classes.eventsList}>
-        <Event event={listToSort[0]} isConflict={false} />
-      </div>
-    );
-  }
+    </div>
+  );
 }
 
 const EventsList = withStyles(EventsListStyles)(EventsListComp);
@@ -309,10 +314,7 @@ const eventStyles = {
 function EventComp(props) {
   const { classes, event, isConflict } = props;
   return (
-    <div
-      key={event.eventId}
-      className={`${classes.event} ${isConflict && classes.conflict}`}
-    >
+    <div className={`${classes.event} ${isConflict && classes.conflict}`}>
       <div className={classes.name}>Event: {event.eventName}</div>
       <div className={classes.startDateTime}>
         Start Date & Time: {event.startDate.replace("T", " ")}
