@@ -224,16 +224,20 @@ function EventsListComp(props) {
         let currentEventEnd = Date.parse(new Date(event.endDate));
         let prevEventEnd =
           index !== 0
-            ? Date.parse(new Date(listToSort[index - 1].startDate))
-            : undefined;
+            ? Date.parse(new Date(listToSort[index - 1].endDate))
+            : null;
         let nextEventStart =
           index !== listToSort.length - 1
             ? Date.parse(new Date(listToSort[index + 1].startDate))
-            : undefined;
+            : null;
         let prevEventConflict = currentEventStart < prevEventEnd;
         let nextEventConflict = nextEventStart < currentEventEnd;
+        //let nextEventConflict = nextEventStart !== null ? nextEventStart < currentEventEnd : false;
         console.log(`prevEventEnd: ${prevEventEnd}`);
         console.log(`nextEventStart: ${nextEventStart}`);
+        console.log(`prevEventConflict: ${prevEventConflict}`);
+        console.log(`nextEventConflict: ${nextEventConflict}`);
+        console.log(`currentEventStart: ${currentEventStart}`);
         if (listToSort.length === 1) {
           // When there is only one event
           return (
@@ -249,7 +253,7 @@ function EventsListComp(props) {
             </div>
           );
         } else if (listToSort.length > 1 && index === listToSort.length - 1) {
-          // case scenarion when there are more than 1 event but we are at last index
+          // case scenarion when there are more than 1 event and we are at last index
           return (
             <div key={event.eventId}>
               <Event event={event} isConflict={prevEventConflict} />
@@ -267,35 +271,6 @@ function EventsListComp(props) {
           );
         }
       })}
-      {/* {listToSort.map((event, index) => {
-          let firstEventStart = Date.parse(new Date(event.startDate));
-          let firstEventEnd = Date.parse(new Date(event.endDate));
-          let secondEventStart =
-            index !== listToSort.length - 1
-              ? Date.parse(new Date(listToSort[index + 1].StartDate))
-              : 1;
-          let secondEventEnd =
-            index !== listToSort.length - 1
-              ? Date.parse(new Date(listToSort[index + 1].endDate))
-              : 1;
-          let startDateConflict =
-            secondEventStart >= firstEventStart &&
-            secondEventStart <= firstEventEnd;
-          let endDateConflict =
-            secondEventEnd >= firstEventStart &&
-            secondEventEnd <= firstEventEnd;
-          let isConflict = startDateConflict || endDateConflict;
-          if (
-            index < listToSort.length - 1 &&
-            (isConflict || nextEventConflict)
-          ) {
-            nextEventConflict = isConflict;
-            console.log(nextEventConflict + isConflict);
-            return <Event event={event} isConflict={true} />;
-          } else {
-            return <Event event={event} isConflict={nextEventConflict} />;
-          }
-        })} */}
     </div>
   );
 }
