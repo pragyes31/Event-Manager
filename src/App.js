@@ -232,42 +232,32 @@ function EventsListComp(props) {
             : null;
         let prevEventConflict = currentEventStart < prevEventEnd;
         let nextEventConflict = nextEventStart < currentEventEnd;
-        //let nextEventConflict = nextEventStart !== null ? nextEventStart < currentEventEnd : false;
-        console.log(`prevEventEnd: ${prevEventEnd}`);
-        console.log(`nextEventStart: ${nextEventStart}`);
-        console.log(`prevEventConflict: ${prevEventConflict}`);
-        console.log(`nextEventConflict: ${nextEventConflict}`);
-        console.log(`currentEventStart: ${currentEventStart}`);
         if (listToSort.length === 1) {
           // When there is only one event
-          return (
-            <div key={event.eventId}>
-              <Event event={event} isConflict={false} />
-            </div>
-          );
+          return <Event event={event} isConflict={false} key={event.eventId} />;
         } else if (listToSort.length > 1 && index === 0) {
           // case scenarion when there are more than 1 event but we are at index 0
           return (
-            <div key={event.eventId}>
-              <Event event={event} isConflict={nextEventConflict} />
-            </div>
+            <Event
+              event={event}
+              isConflict={nextEventConflict}
+              key={event.eventId}
+            />
           );
         } else if (listToSort.length > 1 && index === listToSort.length - 1) {
           // case scenarion when there are more than 1 event and we are at last index
           return (
-            <div key={event.eventId}>
-              <Event event={event} isConflict={prevEventConflict} />
-            </div>
+            <Event
+              event={event}
+              isConflict={prevEventConflict}
+              key={event.eventId}
+            />
           );
         } else {
           return prevEventConflict || nextEventConflict ? (
-            <div key={event.eventId}>
-              <Event event={event} isConflict={true} />
-            </div>
+            <Event event={event} isConflict={true} key={event.eventId} />
           ) : (
-            <div key={event.eventId}>
-              <Event event={event} isConflict={false} />
-            </div>
+            <Event event={event} isConflict={false} key={event.eventId} />
           );
         }
       })}
@@ -279,7 +269,7 @@ const EventsList = withStyles(EventsListStyles)(EventsListComp);
 
 const eventStyles = {
   event: {
-    backgroundColor: "#eee"
+    padding: "10px"
   },
   conflict: {
     border: "1px solid red"
@@ -289,7 +279,10 @@ const eventStyles = {
 function EventComp(props) {
   const { classes, event, isConflict } = props;
   return (
-    <div className={`${classes.event} ${isConflict && classes.conflict}`}>
+    <div
+      key={event.eventId}
+      className={`${classes.event} ${isConflict && classes.conflict}`}
+    >
       <div className={classes.name}>Event: {event.eventName}</div>
       <div className={classes.startDateTime}>
         Start Date & Time: {event.startDate.replace("T", " ")}
