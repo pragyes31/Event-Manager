@@ -49,7 +49,11 @@ export default class App extends React.Component {
 const AddEventButtonStyles = {
   btn: {
     minWidth: "350px",
-    margin: "20px 0px"
+    margin: "20px 0px",
+    backgroundColor: "#00adb5",
+    "&:hover": {
+      backgroundColor: "#00c3cc"
+    }
   }
 };
 
@@ -86,7 +90,11 @@ const EventDetailsFormStyles = {
   },
   btn: {
     width: "60%",
-    margin: "20px 0px"
+    margin: "20px 0px",
+    backgroundColor: "#00adb5",
+    "&:hover": {
+      backgroundColor: "#00c3cc"
+    }
   },
   errorMessage: {
     color: "red",
@@ -162,6 +170,7 @@ class EventDetailsFormComp extends React.Component {
             label="Name your event"
             required
             onChange={this.handleEventName}
+            autoFocus
           />
           <TextField
             label="Event start date &amp; time"
@@ -274,19 +283,35 @@ const eventStyles = {
     justifyContent: "space-between",
     alignItems: "center",
     height: "100px",
-    border: "1px solid blue",
-    borderRadius: "5px"
+    borderRadius: "15px",
+    backgroundColor: "#41505a",
+    color: "#fff"
   },
   conflict: {
-    border: "1px solid red"
+    border: "3px solid #c81818"
+  },
+  modify: {
+    paddingRight: "20px"
   },
   edit: {
-    marginBottom: "5px"
+    marginBottom: "5px",
+    backgroundColor: "#00adb5",
+    width: "76.5px",
+    "&:hover": {
+      backgroundColor: "#00c3cc"
+    }
   },
   button: {
     height: "30px",
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
+    fontSize: "11px"
+  },
+  delete: {
+    backgroundColor: "#e84545",
+    "&:hover": {
+      backgroundColor: "#c81818"
+    }
   }
 };
 
@@ -327,3 +352,5 @@ function EventComp(props) {
 }
 
 const Event = withStyles(eventStyles)(EventComp);
+
+// 3a4750 404b69

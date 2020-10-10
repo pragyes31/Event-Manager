@@ -1,3 +1,9 @@
+body {
+  margin: 0px;
+  padding: 0px;
+  background-color: #eaeaea;
+}
+
 .app {
   font-family: sans-serif;
   display: flex;
