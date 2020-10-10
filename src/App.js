@@ -24,6 +24,12 @@ export default class App extends React.Component {
       isEventFormOpen: !this.state.isEventFormOpen
     });
   };
+  editEvent = (eventId) => {
+    console.log("edit Event");
+  };
+  deleteEvent = (eventId) => {
+    console.log("delete Event");
+  };
   render() {
     //console.log(this.state.eventsList);
     return (
@@ -31,7 +37,11 @@ export default class App extends React.Component {
         <div className="event-app">
           <AddEventButton handleEventForm={this.handleEventForm} />
           {this.state.eventsList.length > 0 && (
-            <EventsList eventsList={this.state.eventsList} />
+            <EventsList
+              eventsList={this.state.eventsList}
+              editEvent={this.props.editEvent}
+              deleteEvent={this.props.deleteEvent}
+            />
           )}
           {this.state.isEventFormOpen && (
             <EventDetailsForm
@@ -242,7 +252,15 @@ function EventsListComp(props) {
         let nextEventConflict = nextEventStart < currentEventEnd;
         if (listToSort.length === 1) {
           // When there is only one event
-          return <Event event={event} isConflict={false} key={event.eventId} />;
+          return (
+            <Event
+              event={event}
+              isConflict={false}
+              key={event.eventId}
+              editEvent={props.editEvent}
+              deleteEvent={props.deleteEvent}
+            />
+          );
         } else if (listToSort.length > 1 && index === 0) {
           // case scenarion when there are more than 1 event but we are at index 0
           return (
@@ -250,6 +268,8 @@ function EventsListComp(props) {
               event={event}
               isConflict={nextEventConflict}
               key={event.eventId}
+              editEvent={props.editEvent}
+              deleteEvent={props.deleteEvent}
             />
           );
         } else if (listToSort.length > 1 && index === listToSort.length - 1) {
@@ -259,13 +279,27 @@ function EventsListComp(props) {
               event={event}
               isConflict={prevEventConflict}
               key={event.eventId}
+              editEvent={props.editEvent}
+              deleteEvent={props.deleteEvent}
             />
           );
         } else {
           return prevEventConflict || nextEventConflict ? (
-            <Event event={event} isConflict={true} key={event.eventId} />
+            <Event
+              event={event}
+              isConflict={true}
+              key={event.eventId}
+              editEvent={props.editEvent}
+              deleteEvent={props.deleteEvent}
+            />
           ) : (
-            <Event event={event} isConflict={false} key={event.eventId} />
+            <Event
+              event={event}
+              isConflict={false}
+              key={event.eventId}
+              editEvent={props.editEvent}
+              deleteEvent={props.deleteEvent}
+            />
           );
         }
       })}
@@ -336,6 +370,7 @@ function EventComp(props) {
           variant="contained"
           color="primary"
           className={`${classes.edit} ${classes.button}`}
+          onClick={props.editEvent(event.eventId)}
         >
           Edit
         </Button>
@@ -343,6 +378,7 @@ function EventComp(props) {
           variant="contained"
           color="secondary"
           className={`${classes.delete} ${classes.button}`}
+          onClick={props.deleteEvent(event.eventId)}
         >
           Delete
         </Button>
