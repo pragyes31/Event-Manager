@@ -204,8 +204,7 @@ const EventDetailsForm = withStyles(EventDetailsFormStyles)(
 
 const EventsListStyles = {
   eventsList: {
-    width: "90%",
-    backgroundColor: "#eee"
+    width: "90%"
   }
 };
 
@@ -269,10 +268,25 @@ const EventsList = withStyles(EventsListStyles)(EventsListComp);
 
 const eventStyles = {
   event: {
-    padding: "10px"
+    padding: "0px 10px",
+    marginBottom: "10px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    height: "100px",
+    border: "1px solid blue",
+    borderRadius: "5px"
   },
   conflict: {
     border: "1px solid red"
+  },
+  edit: {
+    marginBottom: "5px"
+  },
+  button: {
+    height: "30px",
+    display: "flex",
+    flexDirection: "column"
   }
 };
 
@@ -283,14 +297,31 @@ function EventComp(props) {
       key={event.eventId}
       className={`${classes.event} ${isConflict && classes.conflict}`}
     >
-      <div className={classes.name}>Event: {event.eventName}</div>
-      <div className={classes.startDateTime}>
-        Start Date & Time: {event.startDate.replace("T", " ")}
+      <div className={classes.details}>
+        <div className={classes.name}>Event: {event.eventName}</div>
+        <div className={classes.startDateTime}>
+          Start Date & Time: {event.startDate.replace("T", " ")}
+        </div>
+        <div className={classes.endDateTime}>
+          End Date & Time: {event.endDate.replace("T", " ")}
+        </div>
       </div>
-      <div className={classes.endDateTime}>
-        End Date & Time: {event.endDate.replace("T", " ")}
+      <div className={classes.modify}>
+        <Button
+          variant="contained"
+          color="primary"
+          className={`${classes.edit} ${classes.button}`}
+        >
+          Edit
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          className={`${classes.delete} ${classes.button}`}
+        >
+          Delete
+        </Button>
       </div>
-      <div>{event.eventId}</div>
     </div>
   );
 }
