@@ -25,10 +25,13 @@ export default class App extends React.Component {
     });
   };
   editEvent = (eventId) => {
-    console.log("edit Event");
+    console.log(eventId);
   };
   deleteEvent = (eventId) => {
-    console.log("delete Event");
+    let newList = this.state.eventsList.filter(
+      (event) => event.eventId !== eventId
+    );
+    this.setState({ eventsList: [...newList] });
   };
   render() {
     //console.log(this.state.eventsList);
@@ -39,8 +42,8 @@ export default class App extends React.Component {
           {this.state.eventsList.length > 0 && (
             <EventsList
               eventsList={this.state.eventsList}
-              editEvent={this.props.editEvent}
-              deleteEvent={this.props.deleteEvent}
+              editEvent={this.editEvent}
+              deleteEvent={this.deleteEvent}
             />
           )}
           {this.state.isEventFormOpen && (
@@ -197,6 +200,7 @@ class EventDetailsFormComp extends React.Component {
             className={classes.eventInputs}
             onChange={this.handleEventEndDate}
             required
+            min={new Date(this.state.currentEvent.startDate)}
           />
           {!this.state.validEndDate && (
             <div className={classes.errorMessage}>
@@ -370,7 +374,7 @@ function EventComp(props) {
           variant="contained"
           color="primary"
           className={`${classes.edit} ${classes.button}`}
-          onClick={props.editEvent(event.eventId)}
+          onClick={() => props.editEvent(event.eventId)}
         >
           Edit
         </Button>
@@ -378,7 +382,7 @@ function EventComp(props) {
           variant="contained"
           color="secondary"
           className={`${classes.delete} ${classes.button}`}
-          onClick={props.deleteEvent(event.eventId)}
+          onClick={() => props.deleteEvent(event.eventId)}
         >
           Delete
         </Button>
