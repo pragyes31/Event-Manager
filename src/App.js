@@ -12,7 +12,9 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       isEventFormOpen: false,
-      eventsList: []
+      isEditEventFormOpen: false,
+      eventsList: [],
+      eventToEdit: {}
     };
   }
   handleEventForm = () => {
@@ -24,8 +26,23 @@ export default class App extends React.Component {
       isEventFormOpen: !this.state.isEventFormOpen
     });
   };
+  editEventToUI = (newEvent, prevEventId) => {
+    this.setState({
+      eventsList: [...this.state.eventsList, newEvent],
+      isEventFormOpen: !this.state.isEventFormOpen
+    });
+  };
   editEvent = (eventId) => {
-    console.log(eventId);
+    let eventToEdit = this.state.eventsList.filter(
+      (event) => event.eventId === eventId
+    );
+    this.setState({
+      eventToEdit,
+      isEditEventFormOpen: !this.state.isEditEventFormOpen
+    });
+  };
+  handleEditEventForm = () => {
+    this.setState({ isEditEventFormOpen: !this.state.isEditEventFormOpen });
   };
   deleteEvent = (eventId) => {
     let newList = this.state.eventsList.filter(
@@ -51,6 +68,14 @@ export default class App extends React.Component {
               isEventFormOpen={this.state.isEventFormOpen}
               handleEventForm={this.handleEventForm}
               addEventToUI={this.addEventToUI}
+            />
+          )}
+          {this.state.editEvent && (
+            <EditEvent
+              eventToEdit={this.state.eventToEdit}
+              handleEditEventForm={this.handleEditEventForm}
+              isEditEventFormOpen={this.state.isEditEventFormOpen}
+              editEventToUI={this.editEventToUI}
             />
           )}
         </div>
@@ -224,6 +249,142 @@ class EventDetailsFormComp extends React.Component {
 const EventDetailsForm = withStyles(EventDetailsFormStyles)(
   EventDetailsFormComp
 );
+
+const editEventStyles = {
+  addEvent: {
+    width: "420px",
+    height: "auto",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    marginTop: "10px"
+  },
+  eventInputs: {
+    width: "80%",
+    marginBottom: "10px"
+  },
+  btn: {
+    width: "60%",
+    margin: "20px 0px",
+    backgroundColor: "#00adb5",
+    "&:hover": {
+      backgroundColor: "#00c3cc"
+    }
+  },
+  errorMessage: {
+    color: "red",
+    margin: "0px 20px",
+    fontSize: "14px"
+  }
+};
+
+class EditEventComp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      validEndDate: true,
+      prevEventId: props.eventToEdit.eventId,
+      currentEvent: {
+        eventName: props.eventToEdit.eventName,
+        startDate: props.eventToEdit.startDate,
+        endDate: props.eventToEdit.endDate,
+        eventId: props.eventToEdit.eventId
+      }
+    };
+  }
+  handleEditEventForm = (e) => {
+    this.props.editEventToUI(this.state.currentEvent, this.state.prevEventId);
+    e.preventDefault();
+  };
+  handleEventName = (e) => {
+    let eventId = new Date().getTime();
+    this.setState({
+      currentEvent: {
+        ...this.state.currentEvent,
+        eventName: e.target.value,
+        eventId
+      }
+    });
+  };
+  handleEventStartDate = (e) => {
+    let endDate = Date.parse(new Date(this.state.currentEvent.endDate));
+    this.setState({
+      currentEvent: {
+        ...this.state.currentEvent,
+        startDate: e.target.value
+      },
+      validEndDate:
+        endDate < Date.parse(new Date(e.target.value)) ? false : true
+    });
+  };
+  handleEventEndDate = (e) => {
+    let startDate = Date.parse(new Date(this.state.currentEvent.startDate));
+    this.setState({
+      currentEvent: {
+        ...this.state.currentEvent,
+        endDate: e.target.value
+      },
+      validEndDate:
+        Date.parse(new Date(e.target.value)) < startDate ? false : true
+    });
+  };
+  render() {
+    const { classes } = this.props;
+    return (
+      <Dialog
+        open={this.props.isEditEventFormOpen}
+        aria-labelledby="Add New event"
+        aria-describedby="Dialog window to add details about the new page"
+        onBackdropClick={this.props.handleEventForm}
+        onEscapeKeyDown={this.props.handleEventForm}
+        classes={{ paper: classes.addEventDialog }}
+      >
+        <form className={classes.addEvent} onSubmit={this.handleEditEventForm}>
+          <TextField
+            value={this.state.currentEvent.eventName}
+            className={classes.eventInputs}
+            label="Name your event"
+            required
+            onChange={this.handleEventName}
+            autoFocus
+          />
+          <TextField
+            label="Event start date &amp; time"
+            type="datetime-local"
+            value={this.state.currentEvent.startDate}
+            className={classes.eventInputs}
+            onChange={this.handleEventStartDate}
+            required
+          />
+          <TextField
+            label="Event end date &amp; time"
+            type="datetime-local"
+            value={this.state.currentEvent.endDate}
+            className={classes.eventInputs}
+            onChange={this.handleEventEndDate}
+            required
+            min={new Date(this.state.currentEvent.startDate)}
+          />
+          {!this.state.validEndDate && (
+            <div className={classes.errorMessage}>
+              The end date and time should be greater than the start date.
+            </div>
+          )}
+          <Button
+            type="submit"
+            className={classes.btn}
+            variant="contained"
+            color="primary"
+          >
+            Add Event
+          </Button>
+        </form>
+      </Dialog>
+    );
+  }
+}
+
+const EditEvent = withStyles(editEventStyles)(EditEventComp);
 
 const EventsListStyles = {
   eventsList: {
