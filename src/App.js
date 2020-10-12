@@ -36,8 +36,9 @@ export default class App extends React.Component {
     let eventToEdit = this.state.eventsList.filter(
       (event) => event.eventId === eventId
     );
+    console.log(eventToEdit);
     this.setState({
-      eventToEdit,
+      eventToEdit: eventToEdit[0],
       isEditEventFormOpen: !this.state.isEditEventFormOpen
     });
   };
