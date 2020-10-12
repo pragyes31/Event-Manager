@@ -27,8 +27,11 @@ export default class App extends React.Component {
     });
   };
   editEventToUI = (newEvent, prevEventId) => {
+    let newList = this.state.eventsList.filter(
+      (event) => event.eventId !== prevEventId
+    );
     this.setState({
-      eventsList: [...this.state.eventsList, newEvent],
+      eventsList: [...newList, newEvent],
       isEventFormOpen: !this.state.isEventFormOpen
     });
   };
