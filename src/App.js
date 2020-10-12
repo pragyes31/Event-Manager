@@ -51,7 +51,6 @@ export default class App extends React.Component {
     this.setState({ eventsList: [...newList] });
   };
   render() {
-    //console.log(this.state.eventsList);
     return (
       <div className="app">
         <div className="event-app">
@@ -70,7 +69,7 @@ export default class App extends React.Component {
               addEventToUI={this.addEventToUI}
             />
           )}
-          {this.state.editEvent && (
+          {this.state.isEditEventFormOpen && (
             <EditEvent
               eventToEdit={this.state.eventToEdit}
               handleEditEventForm={this.handleEditEventForm}
@@ -335,8 +334,8 @@ class EditEventComp extends React.Component {
         open={this.props.isEditEventFormOpen}
         aria-labelledby="Add New event"
         aria-describedby="Dialog window to add details about the new page"
-        onBackdropClick={this.props.handleEventForm}
-        onEscapeKeyDown={this.props.handleEventForm}
+        onBackdropClick={this.props.handleEditEventForm}
+        onEscapeKeyDown={this.props.handleEditEventForm}
         classes={{ paper: classes.addEventDialog }}
       >
         <form className={classes.addEvent} onSubmit={this.handleEditEventForm}>
