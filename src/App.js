@@ -32,14 +32,13 @@ export default class App extends React.Component {
     );
     this.setState({
       eventsList: [...newList, newEvent],
-      isEventFormOpen: !this.state.isEventFormOpen
+      isEditEventFormOpen: !this.state.isEditEventFormOpen
     });
   };
   editEvent = (eventId) => {
     let eventToEdit = this.state.eventsList.filter(
       (event) => event.eventId === eventId
     );
-    console.log(eventToEdit);
     this.setState({
       eventToEdit: eventToEdit[0],
       isEditEventFormOpen: !this.state.isEditEventFormOpen
@@ -158,7 +157,8 @@ class EventDetailsFormComp extends React.Component {
     };
   }
   handleSubmitForm = (e) => {
-    this.props.addEventToUI(this.state.currentEvent);
+    if (this.state.validEndDate)
+      this.props.addEventToUI(this.state.currentEvent);
     e.preventDefault();
   };
   handleEventName = (e) => {
@@ -296,7 +296,9 @@ class EditEventComp extends React.Component {
     };
   }
   handleEditEventForm = (e) => {
-    this.props.editEventToUI(this.state.currentEvent, this.state.prevEventId);
+    if (this.state.validEndDate) {
+      this.props.editEventToUI(this.state.currentEvent, this.state.prevEventId);
+    }
     e.preventDefault();
   };
   handleEventName = (e) => {
